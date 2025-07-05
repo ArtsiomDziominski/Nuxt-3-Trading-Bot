@@ -1,0 +1,8 @@
+.v-theme--dark {
+    --card-second-background: #282828;
+}
+
+a {
+    text-decoration: none;
+    color: inherit;
+}
