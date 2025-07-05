@@ -1,9 +1,12 @@
 <script setup lang="ts">
+definePageMeta({
+  middleware: "unauthenticated",
+})
 </script>
 
 <template>
 	<div class="login-wrapper">
-		<LoginForm />
+		<AuthLoginForm />
 	</div>
 </template>
 

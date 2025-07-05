@@ -1,18 +1,31 @@
 <template>
-	<GlobalLoading v-if="isLoading" />
-	<NuxtLayout v-else>
+	<NuxtLayout>
 		<NuxtPage />
 	</NuxtLayout>
 </template>
 
 <script setup lang="ts">
-const isLoading = ref(true);
+import {userStore} from "~/store/user";
 
-onMounted(() => {
-	isLoading.value = false;
+const storeUser = userStore();
+const { userToken, isAuthenticated } = storeToRefs(storeUser);
+
+await useAsyncData('app', (app) => {
+  const cookie = app?.ssrContext?.event.node.req.headers?.cookie || '';
+  const cookieArray = cookie.split(';');
+  const cookieObject: Record<string, string> = {};
+  cookieArray.forEach((c) => {
+    const cookArray = c.split('=');
+    cookieObject[cookArray[0].trim()] = cookArray[1];
+  });
+
+  userToken.value = cookieObject?.['token'];
+
+  return Promise.allSettled([
+    isAuthenticated.value && storeUser.requestSetUser(),
+  ]);
 });
 </script>
 
 <style lang="scss">
-.app {}
 </style>
